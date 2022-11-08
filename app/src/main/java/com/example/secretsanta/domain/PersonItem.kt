@@ -2,7 +2,7 @@ package com.example.secretsanta.domain
 
 data class PersonItem(
     val name: String,
-    val mail: Char,
+    val enabled: Boolean,
     var id: Int = UNDEFINED_ID
 )
 {
