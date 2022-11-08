@@ -1,8 +1,8 @@
 package com.example.secretsanta.domain
 
-class GetPersonItemUseCase {
+class GetPersonItemUseCase(private val personListRepository: PersonListRepository) {
 
     fun getPersonItem(personItemId: Int): PersonItem{
-        TODO()
+        return personListRepository.getPersonItem(personItemId)
     }
 }
