@@ -1,7 +1,13 @@
 package com.example.secretsanta.domain
 
 data class PersonItem(
-    val id: Int,
     val name: String,
     val mail: Char,
+    var id: Int = UNDEFINED_ID
 )
+{
+    companion object {
+        //присваиваем значение, если настоящие значение id еще не установлено
+        const val UNDEFINED_ID = -1
+    }
+}
