@@ -11,24 +11,32 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.secretsanta.R
 import com.example.secretsanta.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var personListAdapter: PersonListAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // llShopList = findViewById(R.id.ll_shop_list)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.personList.observe(this){
-            Log.d("MainActivityTest", it.toString())
+        setupRecyclerView()
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.personList.observe(this) {
+            personListAdapter.personList = it
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val rvPersonList = findViewById<RecyclerView>(R.id.rv_person_list)
+        with(rvPersonList) {
+            personListAdapter = PersonListAdapter()
+            adapter = personListAdapter
         }
     }
 

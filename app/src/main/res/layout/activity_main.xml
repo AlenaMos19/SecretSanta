@@ -7,7 +7,7 @@
     tools:context=".presentation.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_shop_list"
+        android:id="@+id/rv_person_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.952"
-        app:layout_constraintStart_toStartOf="@+id/rv_shop_list"
+        app:layout_constraintStart_toStartOf="@+id/rv_person_list"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.838"
         app:srcCompat="@android:drawable/ic_menu_add" />

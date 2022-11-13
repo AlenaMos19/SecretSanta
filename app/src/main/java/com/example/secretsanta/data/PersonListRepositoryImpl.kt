@@ -4,13 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.secretsanta.domain.PersonItem
 import com.example.secretsanta.domain.PersonListRepository
+import java.util.*
+import kotlin.Comparator
+import kotlin.random.Random
 
 object PersonListRepositoryImpl : PersonListRepository {
 
     private val personListLD = MutableLiveData<List<PersonItem>>()
-    private val personList = mutableListOf<PersonItem>()
+    private val personList = sortedSetOf<PersonItem>({ o1, o2 -> o1.id.compareTo(o2.id)})
 
     private var autoIncrementId = 0
+
+    init {
+        for (i in 0 until 1000) {
+            val item = PersonItem("Name $i", Random.nextBoolean())
+            addPersonItem(item)
+        }
+    }
 
     override fun addPersonItem(personItem: PersonItem) {
         if (personItem.id == PersonItem.UNDEFINED_ID) {
@@ -45,3 +55,5 @@ object PersonListRepositoryImpl : PersonListRepository {
         personListLD.value = personList.toList()
     }
 }
+
+
