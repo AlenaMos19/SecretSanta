@@ -1,21 +1,11 @@
 package com.example.secretsanta.presentation
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.secretsanta.R
-import com.example.secretsanta.databinding.ActivityMainBinding
-import com.example.secretsanta.domain.PersonItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.personList.observe(this) {
-            personListAdapter.submitList(it)
+            personListAdapter.personList = it
         }
     }
 
@@ -39,14 +29,6 @@ class MainActivity : AppCompatActivity() {
         with(rvPersonList) {
             personListAdapter = PersonListAdapter()
             adapter = personListAdapter
-        }
-
-        personListAdapter.onPersonItemLongClickListener = {
-            viewModel.changeEnableState(it)
-        }
-
-        personListAdapter.onPersonItemClickListener = {
-            TODO()
         }
 
         fun onPersonItemSwipeListener(rvPersonList: RecyclerView) {
@@ -63,9 +45,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val item = personListAdapter.currentList[viewHolder.adapterPosition]
+                    val item = personListAdapter.personList[viewHolder.adapterPosition]
                     viewModel.deletePersonItem(item)
                 }
+            }
+
+            personListAdapter.onPersonItemLongClickListener = {
+                viewModel.changeEnableState(it)
+            }
+
+            personListAdapter.onPersonItemClickListener = {
+                TODO()
             }
 
             val itemTouchHelper = ItemTouchHelper(callback)

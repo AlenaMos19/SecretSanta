@@ -3,7 +3,7 @@ package com.example.secretsanta.presentation
 import androidx.recyclerview.widget.DiffUtil
 import com.example.secretsanta.domain.PersonItem
 
-class PersonItemDiffCallBack(
+class PersonListDiffCallBack(
     private val oldList: List<PersonItem>,
     private val newList: List<PersonItem>,
 ): DiffUtil.Callback() {
