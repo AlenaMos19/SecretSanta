@@ -11,9 +11,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.secretsanta.R
 import com.example.secretsanta.databinding.ActivityMainBinding
+import com.example.secretsanta.domain.PersonItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.personList.observe(this) {
-            personListAdapter.personList = it
+            personListAdapter.submitList(it)
         }
     }
 
@@ -38,9 +40,40 @@ class MainActivity : AppCompatActivity() {
             personListAdapter = PersonListAdapter()
             adapter = personListAdapter
         }
+
+        personListAdapter.onPersonItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
+
+        personListAdapter.onPersonItemClickListener = {
+            TODO()
+        }
+
+        fun onPersonItemSwipeListener(rvPersonList: RecyclerView) {
+            val callback = object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val item = personListAdapter.currentList[viewHolder.adapterPosition]
+                    viewModel.deletePersonItem(item)
+                }
+            }
+
+            val itemTouchHelper = ItemTouchHelper(callback)
+            itemTouchHelper.attachToRecyclerView(rvPersonList)
+
+        }
     }
 
-
-
-
 }
+
+

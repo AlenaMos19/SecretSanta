@@ -1,26 +1,17 @@
 package com.example.secretsanta.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.secretsanta.R
 import com.example.secretsanta.domain.PersonItem
-import com.example.secretsanta.presentation.PersonListAdapter.PersonItemViewHolder
 
-class PersonListAdapter: RecyclerView.Adapter<PersonItemViewHolder>() {
 
-    class PersonItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tv_name)
-    }
+class PersonListAdapter : ListAdapter<PersonItem, PersonItemViewHolder>(PersonItemDiffCallBack()) {
 
-    var personList = listOf<PersonItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+
+    var onPersonItemLongClickListener: ((PersonItem) -> Unit)? = null
+    var onPersonItemClickListener: ((PersonItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonItemViewHolder {
         val layout = when(viewType){
@@ -33,25 +24,19 @@ class PersonListAdapter: RecyclerView.Adapter<PersonItemViewHolder>() {
     }
 
     override fun onBindViewHolder(viewHolder: PersonItemViewHolder, position: Int) {
-        val personItem = personList[position]
+        val personItem = getItem(position)
         viewHolder.view.setOnLongClickListener {
+            onPersonItemLongClickListener?.invoke(personItem)
             true
         }
+        viewHolder.view.setOnClickListener {
+            onPersonItemClickListener?.invoke(personItem)
+        }
         viewHolder.tvName.text = personItem.name
-
-    }
-
-    override fun onViewRecycled(viewHolder: PersonItemViewHolder) {
-        super.onViewRecycled(viewHolder)
-        viewHolder.tvName.text = ""
-        viewHolder.tvName.setTextColor(ContextCompat.getColor(
-            viewHolder.view.context,
-            android.R.color.white
-        ))
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = personList[position]
+        val item = getItem(position)
         return if(item.enabled){
             VIEW_TYPE_ENABLED
         } else {
@@ -59,9 +44,6 @@ class PersonListAdapter: RecyclerView.Adapter<PersonItemViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int {
-        return personList.size
-    }
 
     companion object {
 
