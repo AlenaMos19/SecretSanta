@@ -1,5 +1,7 @@
 package com.example.secretsanta.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.secretsanta.data.PersonListRepositoryImpl
 import com.example.secretsanta.domain.AddPersonItemUseCase
@@ -15,8 +17,21 @@ class PersonItemViewModel(private val getPersonItemUseCase: GetPersonItemUseCase
 
    // private val repository = PersonListRepositoryImpl
 
+    private val _errorInputName = MutableLiveData<Boolean>()
+    val errorInputName: LiveData<Boolean>
+        get() = _errorInputName
+
+    private val _personItem = MutableLiveData<PersonItem>()
+    val personItem: LiveData<PersonItem>
+        get() = _personItem
+
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+    val shouldCloseScreen: LiveData<Unit>
+        get() = _shouldCloseScreen
+
     fun getPersonItem(personItemId: Int){
         val item = getPersonItemUseCase.getPersonItem(personItemId)
+        _personItem.value = item
     }
 
     fun addPersonItemUseCase(inputName : String?){
@@ -25,6 +40,7 @@ class PersonItemViewModel(private val getPersonItemUseCase: GetPersonItemUseCase
         if(correctName) {
             val personItem = PersonItem(name, true)
             addPersonItemUseCase.addPersonItem(personItem)
+            _shouldCloseScreen.value = Unit
         }
     }
 
@@ -32,8 +48,10 @@ class PersonItemViewModel(private val getPersonItemUseCase: GetPersonItemUseCase
         val name = parseName(inputName)
         val correctName = correctName(name)
         if(correctName) {
-            val personItem = PersonItem(name, true)
-            editPersonItemUseCase.editPersonItem(personItem)
+            _personItem.value?.let {
+                val item = it.copy(name = name)
+                editPersonItemUseCase.editPersonItem(item)
+                _shouldCloseScreen.value = Unit }
         }
     }
 
@@ -44,9 +62,13 @@ class PersonItemViewModel(private val getPersonItemUseCase: GetPersonItemUseCase
     private fun correctName(name: String): Boolean{
         var result = true
         if (name.isBlank()){
-            //TODO: отображение ошибки
+            _errorInputName.value = true
             result = false
         }
         return result
+    }
+
+    fun resetErrorInputName(){
+        _errorInputName.value = false
     }
 }
