@@ -10,12 +10,13 @@ import com.example.secretsanta.domain.GetPersonItemUseCase
 import com.example.secretsanta.domain.PersonItem
 
 
-class PersonItemViewModel(private val getPersonItemUseCase: GetPersonItemUseCase,
-                          private val addPersonItemUseCase: AddPersonItemUseCase,
-                          private val editPersonItemUseCase: EditPersonItemUseCase
-) : ViewModel(){
+class PersonItemViewModel() : ViewModel(){
 
-   // private val repository = PersonListRepositoryImpl
+    private val repository = PersonListRepositoryImpl
+
+    private val getPersonItemUseCase = GetPersonItemUseCase(repository)
+    private val addPersonItemUseCase = AddPersonItemUseCase(repository)
+    private val editPersonItemUseCase = EditPersonItemUseCase(repository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
