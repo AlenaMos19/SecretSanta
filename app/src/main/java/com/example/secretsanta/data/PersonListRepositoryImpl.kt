@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.secretsanta.domain.PersonItem
 import com.example.secretsanta.domain.PersonListRepository
-import java.util.*
-import kotlin.Comparator
 import kotlin.random.Random
 
 object PersonListRepositoryImpl : PersonListRepository {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.secretsanta.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.personList.observe(this) {
             personListAdapter.personList = it
+        }
+        val buttonAddPerson = findViewById<FloatingActionButton>(R.id.button_add_person)
+        buttonAddPerson.setOnClickListener {
+            val intent = PersonActivity.newIntentAdd(this)
+            startActivity(intent)
         }
     }
 
@@ -55,7 +61,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             personListAdapter.onPersonItemClickListener = {
-                TODO()
+                val intent = PersonActivity.newIntentEdit(this, it.id)
+                startActivity(intent)
             }
 
             val itemTouchHelper = ItemTouchHelper(callback)
